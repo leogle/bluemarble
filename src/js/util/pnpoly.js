@@ -1,3 +1,9 @@
+/**
+ * 判断该点是否在多边形内
+ * @param point
+ * @param vs
+ * @returns {boolean}
+ */
 pnpoly = function (point, vs) {
     // ray-casting algorithm based on
     // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
