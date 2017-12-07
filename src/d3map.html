@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>D3地图</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<body>
+    <div style="width:60%;height:60%">
+    </div>
+    <script type="text/javascript">
+        var width = 1000;
+        var height = 1000;
+        var svg = d3.select("div").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(0,0)");
+
+        //经纬度转换
+        var projection = d3.geo.mercator()
+            .center([107, 31]) //设置投影中心
+            .scale(860)
+            .translate([width / 2, height / 2]); //平移
+
+        var path = d3.geo.path()
+            .projection(projection);
+
+        var color = d3.scale.category20();
+
+        d3.json("data/china.geo.json", function(error, root) {
+            svg.selectAll("path")
+                .data(root.features)
+                .enter()
+                .append("path")
+                .attr("stroke", "#000")
+                .attr("stroke-width", 0)
+                .attr("fill", function(d, i) {
+                    return "rgba(100,100,100,0.5)";
+                })
+                .attr("d", path)
+                /*
+                .on("mouseover", function(d, i) {
+                    d3.select(this)
+                        .attr("fill", "yellow");
+                })
+                .on("mouseout", function(d, i) {
+                    d3.select(this)
+                        .attr("fill", color(i));
+                });*/
+        });
+    </script>
+</body>
+
+
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/echarts/echarts-all-3.js"></script>
+    <script src="js/echarts/map/chongqing.js"></script>
+</head>
+<body>
+<div id="main" style="width: 800px;height:500px;margin:auto"></div>
+</body>
+<script>
+    var dom = document.getElementById("main");
+    var myChart = echarts.init(dom);
+    var station;
+    $(function () {
+        var date = '@date';
+        var stationCode = '@stationCodes';
+        var pollutantType = 'AQI';
+        getGraph(pollutantType);
+        getCityData(date, stationCode, pollutantType, 0);
+    });
+
+
+
+    var series = [];
+    var data = [{
+        Longitude:106.379,
+        Latitude:29.8272,
+        AQI:90,
+    },{
+        Longitude:106.424,
+        Latitude:29.8264,
+        AQI:120,
+    },{
+        Longitude:106.626,
+        Latitude:29.7228,
+        AQI:210,
+    },{
+        Longitude:106.296,
+        Latitude:29.5983,
+        AQI:150,
+    },{
+        Longitude:106.586114,
+        Latitude:29.513849,
+        AQI:200,
+    },{
+        Longitude:106.6657,
+        Latitude:29.632,
+        AQI:200,
+    }
+        ,{
+            Longitude:106.634,
+            Latitude:29.4892,
+            AQI:200,
+        }
+        ,{
+            Longitude:106.364,
+            Latitude:29.4822,
+            AQI:200,
+        }
+        ,{
+            Longitude:106.5469,
+            Latitude:29.565,
+            AQI:120,
+        }
+        ,{
+            Longitude:106.617,
+            Latitude:29.7125,
+            AQI:100,
+        }
+        ,{
+            Longitude:106.48167,
+            Latitude:29.4847,
+            AQI:200,
+        }
+        ,{
+            Longitude:106.6657,
+            Latitude:29.632,
+            AQI:100,
+        }
+
+        ,{
+            Longitude:107.484048,
+            Latitude:30.237978,
+            AQI:120,
+        }
+        ,{
+            Longitude:107.26328,
+            Latitude:29.651848,
+            AQI:150,
+        }
+        ,{
+            Longitude:108.01757,
+            Latitude:29.805699,
+            AQI:130,
+        }];
+
+    function getCityData(date, stationCode, pollutantType, verityState) {
+        data = [];
+        $.ajax({
+            url: "/SynthesizeAnalysis/GetStationDayData",
+            data: "&date=" + date + "&stationCode=" + stationCode + "&verityState=" + verityState,
+            type: "get",
+            async: true,
+            dataType: "json",
+            success: function (res) {
+                data = res;
+                getGraph(pollutantType);
+            }
+        });
+    }
+
+    function getGraph(pollutantType) {
+        series = [];
+        for (var i = 0; i < data.length; i++) {
+            var value = data[i][pollutantType];
+            var longitude = data[i]["Longitude"];
+            var latitude = data[i]["Latitude"];
+            if (value != '—') {
+                var arr = [];
+                arr.push(longitude);
+                arr.push(latitude);
+                arr.push(value);
+                series.push(arr);
+            }
+        }
+        getPieces(pollutantType);
+    }
+
+    var pieces = [];
+    var Values = [];
+    function getPieces(pollutantType) {
+        pieces = [];
+        Values = [];
+        if (pollutantType == "AQI") {
+            Values = [50, 100, 150, 200, 300];
+        } else if (pollutantType == "SO2") {
+            Values = [50, 150, 475, 800, 1600];
+        } else if (pollutantType == "NO2") {
+            Values = [40, 80, 180, 280, 565];
+        } else if (pollutantType == "PM10") {
+            Values = [50, 150, 250, 350, 420];
+        } else if (pollutantType == "CO") {
+            Values = [2, 4, 14, 24, 36];
+        } else if (pollutantType == "O3_8h") {
+            Values = [100, 160, 215, 265, 800];
+        } else if (pollutantType == "PM2_5") {
+            Values = [35, 75, 115, 150, 250];
+        }
+        getChart();
+    }
+
+    function getChart() {
+        var option = {
+            title: {
+                text: '重庆空气质量情况分布',
+                left: 'center',
+                textStyle: {
+                    color: '#000'
+                }
+            },
+            backgroundColor: '#fff',
+            visualMap: {
+                min: 0,
+                max: Values[4],
+                left: 'right',
+                top: 50,
+                //splitNumber: 5,
+                inRange: {
+                    color: ['#8B0000', '#9A32CD', '#EE3B3B', '#EEAD0E', '#EEEE00', '#00EE00'].reverse()
+                },
+            },
+            geo: {
+                map: '重庆',
+                label: {
+                    normal: {
+                        show: true,
+                        color: '#fff',
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                roam: true,
+                itemStyle: {
+                    normal: {
+                        areaColor: '#C0C0C0',
+                        borderColor: '#111'
+                    },
+                    emphasis: {
+                        areaColor: '#2D8DAA'
+                    }
+                }
+            },
+            series: [{
+                name: 'AQI',
+                type: 'heatmap',
+                coordinateSystem: 'geo',
+                data: series,
+            }]
+        };
+        myChart.setOption(option, true);
+    }
+</script>
+</html>

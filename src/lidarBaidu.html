@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>百度雷达图</title>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=WrdHfTfV71jmAc5MVU33G22HxczFdSmP"></script>
+    <script src="js/layer/general-map.js"></script>
+    <script src="js/layer/layer-base.js"></script>
+    <script src="js/layer/lidar-layer.js"></script>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="data/lidar3.js"></script>
+    <script src="js/painter/lidar-painter.js"></script>
+</head>
+<body>
+<div id="map" style="width:100%; height:600px"></div>
+</body>
+<script>
+    var map = new BMap.Map('map', {
+        minZoom: 5
+    });
+    map.centerAndZoom(new BMap.Point(113.261, 23.096), 15);
+    map.enableScrollWheelZoom(true);
+
+    var canvas = document.createElement('canvas');
+    canvas.width = map.getSize().width;
+    canvas.height = map.getSize().height;
+    canvas.style.top = 0;
+    canvas.style.left = 0;
+    canvas.style.position = 'absolute';
+
+    var gmap = new GeneralMap({
+        type:'baidu',
+        map:map
+    });
+
+    var layer = new LidarLayer({
+        map:gmap,
+        layerOption:canvas,
+        canvas:canvas,
+        radius:5000,
+        dataLength:300,
+    });
+    layer.update(lidarData);
+</script>
+</html>

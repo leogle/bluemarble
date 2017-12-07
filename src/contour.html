@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>D3地图</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/d3.v4.js"></script>
+    <script src="js/d3-hsv.v0.1.js"></script>
+    <script src="js/d3-contour.v1.js"></script>
+    <script src="js/d3-geo.v1.js"></script>
+    <script src="js/d3map.js"></script>
+    <script src="js/pnpoly.js"></script>
+</head>
+
+<body>
+    <div>
+        <button onclick="hide()">hide</button>
+        <button onclick="show()">show</button>
+    </div>
+    <div>
+        <svg width="960" height="900" stroke="#ffa" stroke-width="0.5"></svg>
+    </div>
+</body>
+<script>
+    var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+    //墨卡托投影
+    var projection = d3.geoMercator()
+        .center([107, 32]) //设置投影中心
+        .scale(4000)
+        .translate([300, height*3/4]); //平移
+    //颜色设置
+    var i0 = d3.interpolateHsvLong(d3.hsv(120, 1, 0.65), d3.hsv(60, 1, 0.90)),
+        i1 = d3.interpolateHsvLong(d3.hsv(60, 1, 0.90), d3.hsv(0, 0, 0.95)),
+        interpolateTerrain = function(t) {
+            return t < 0.5 ? i0(t * 2) : i1((t - 0.5) * 2);
+        },
+        color = d3.scaleSequential(interpolateTerrain).domain([0, 5]);
+
+    var path = d3.geoPath().projection(projection);
+
+    //图例
+    legendData=[{name:'1级',value:0},{name:'2级',value:1},{name:'3级',value:2},{name:'4级',value:3},{name:'5级',value:4},];
+        var legend = svg.append("g")
+        .selectAll("g")
+        .data(legendData)
+        .enter()
+        .append("g");
+        legend.append("rect")
+        .attr("x",100)
+        .attr("y",function (d) {
+            return d.value*30+200;
+        }).attr("width",20).attr("height",20)
+        .attr("fill",function (d) {
+            return color(d.value);
+        });
+        legend.append("text")
+            .attr("x",130)
+            .attr("y",function (d) {
+                return d.value*30+215;
+            })
+            .attr("fill","black")
+            .text(function (d) {
+        return d.name;
+    });
+
+    var shanxiPoly;
+    d3.json("data/mapdata/china.json",function (error,root) {
+       for(var i = 0;i < root.features.length;i++){
+           if(root.features[i].properties.id == "61"){
+               shanxiPoly = root.features[i].geometry.coordinates[0];
+               //shanxiPoly = halfData(shanxiPoly);
+               break;
+           }
+       }
+    });
+
+    //地图
+    d3.json("data/mapdata/geometryprovince/61.json",function (error,root) {
+       var map = svg.selectAll("path")
+           .data(root.features)
+           .enter()
+           .append("path")
+           .attr("stroke", "#79787a")
+           .attr("stroke-width", 1)
+           .attr("fill", function(d, i) {
+               return "rgba(100,100,100,0.5)";
+           })
+           .attr("d", path)
+           //.append("h1")
+           .text(function (d) {
+               console.log(d.properties.name);
+               return d.properties.name;
+           })
+    });
+
+    //污染物展示
+    d3.json("data/co.json", function(error, co) {
+        if (error) throw error;
+        data = co.data;
+        flatDataLngLat(data,shanxiPoly);
+        //数据坐标映射
+        var points = project2Point(projection,data);
+        var sw = points[0];
+        var ne = points[points.length-1];
+        var pointwidth = ne.x-sw.x;
+
+        //绘制点阵
+        /*
+        svg.append("g")
+            .attr("stroke","white")
+            .selectAll("circle")
+            .data(points)
+            .enter().append("circle")
+                .attr("cx",function (d) {return d.x;})
+            .attr("cy",function (d) {
+                return d.y;
+            })
+            .attr("fill",function (d) {
+                return color2(d.count/max);
+            })
+            .attr("r",2);*/
+
+        //将数据转成75*75矩阵
+        var values = [];
+        for(var i =0;i<points.length;i++){
+            var point = points[(74-parseInt(i/75))*75+i%75];
+            values.push(point.count);
+        }
+        //生成等高path
+        var contours = d3.contours()
+            .size([75, 75])
+            .thresholds(d3.range(-1, 5, 1))
+            (values);
+        //绘制等高图
+        svg.append("g")
+            .attr("id","contoursChart")
+            .attr("stroke", "steelblue")
+            .selectAll("path")
+            .data(contours)
+            .enter().append("path").attr("stroke-width",0)
+            .attr("d", d3.geoPath(d3.geoIdentity().translate([sw.x,ne.y]).scale(pointwidth/75)))
+            .attr("fill", function(d) {
+                if(d.value==-1)
+                    return "white";
+                return color(d.value);
+            })
+            .attr("fill-opacity",0.5);
+    });
+    function hide() {
+        document.getElementById("contoursChart").style.visibility="hidden";
+    };
+    var show = function () {
+        document.getElementById("contoursChart").style.visibility="visible";
+    }
+</script>
+
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/d3.v4.js"></script>
+    <script src="js/d3-hsv.v0.1.js"></script>
+    <script src="js/d3-contour.v1.js"></script>
+    <script src="js/d3-geo.v1.js"></script>
+    <script src="js/d3map.js"></script>
+    <script src="js/pnpoly.js"></script>
+    <script src="js/chart/contour.js"></script>
+</head>
+<body>
+    <svg id="svg" width="900" height="699"></svg>
+</body>
+    <script type="text/javascript">
+        var chart = new ContourChart({
+            id:"svg",
+            center:[107, 32],
+            scale:4000,
+        });
+        d3.json("data/co.json",function (error,data) {
+            chart.setData(data.data);
+        });
+    </script>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百度渲染图</title>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=WrdHfTfV71jmAc5MVU33G22HxczFdSmP"></script>
+    <script src="js/layer/general-map.js"></script>
+    <script src="js/layer/layer-base.js"></script>
+    <script src="js/layer/spatial-layer.js"></script>
+</head>
+<body>
+<div id="map" style="width:100%; height:800px"></div>
+</body>
+<script>
+    var map = new BMap.Map('map', {
+        minZoom: 5
+    });
+    map.centerAndZoom(new BMap.Point(113.261, 23.096), 11);
+    map.enableScrollWheelZoom(true);
+
+    var gmap = new GeneralMap({
+        type:'baidu',
+        map:map
+    });
+
+    var layer = new SpatialLayer({
+        map:gmap,
+        opacity:0.7,
+        drawArea:{ "SW": [112.23, 21.0], "NE": [114.28, 24.11] },
+        gradient:{
+            0: "#eefdac", //蓝色 0
+            0.1999: "#eefdac", //绿色 50
+            0.2: "#aede5b", //黄色 100
+            0.3999: "#aede5b", //橙色 150
+            0.4: "#5eaf1e", //红色 200   //当正好渲染此颜色时图片上有麻点，不知道原因未解决
+            0.5999: "#5eaf1e", //红色 200   //当正好渲染此颜色时图片上有麻点，不知道原因未解决
+            0.6: "#028b5b", //紫色 300
+            0.7999: "#028b5b", //紫色 300
+            0.8: "#008b15", //褐红 400
+            1.0: "#008b15"}
+    });
+
+    data = {datas:[{"lat": 23.002770, "value": 100.0, "lng": 113.252100}, {"lat": 23.400830, "value": 79.0, "lng": 113.451250},
+        {"lat": 23.400830, "value": 39.0, "lng": 113.251250},
+        {"lat": 22.803480, "value": 124.0, "lng": 113.168240},
+        {"lat": 23.353690, "value": 100.0, "lng": 113.267940},
+        {"lat": 23.23690, "value": 200.0, "lng": 113.467940},
+        {"lat": 23.094140, "value": 450.0, "lng": 113.261360}],paramName:"PM10",unit:"ug/m3"};
+
+    layer.update(data);
+    /*
+    var bdary = new BMap.Boundary();
+    bdary.get("中国", function(rs) { //获取行政区域
+        var count = rs.boundaries.length; //行政区域的点有多少个
+        console.log(rs.boundaries);
+        var pointArray = [];
+        for (var i = 0; i < count; i++) {
+            var ply = new BMap.Polygon(rs.boundaries[i], {
+                strokeWeight: 2,
+                strokeColor: "#12c3bd",
+                fillColor: 'rgba(255,255,255,0.1)'
+            }); //建立多边形覆盖物
+            map.addOverlay(ply); //添加覆盖物
+            pointArray = pointArray.concat(ply.getPath());
+        }
+
+    });*/
+</script>
+</html>

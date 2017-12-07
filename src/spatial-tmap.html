@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天地图渲染</title>
+    <script src="http://api.tianditu.com/api?v=4.0" type="text/javascript"></script>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/layer/general-map.js"></script>
+    <script src="js/layer/layer-base.js"></script>
+    <script src="js/layer/spatial-layer.js"></script>
+</head>
+<body>
+<div id="mapDiv" style="position:absolute;width:100%; height:900px"></div>
+</body>
+<script>
+    $(document).ready(function () {
+        var map;
+        var zoom = 12;
+
+        map = new T.Map('mapDiv');
+        map.centerAndZoom(new T.LngLat(113.261, 23.096), zoom);
+
+        var gmap = new GeneralMap({
+            type:'tmap',
+            map:map
+        });
+
+        var layer = new SpatialLayer({
+            map:gmap,
+            opacity:0.7,
+            drawArea:{ "SW": [112.23, 21.0], "NE": [114.28, 24.11] },
+
+        });
+
+        data = {datas:[{"lat": 23.002770, "value": 100.0, "lng": 113.252100}, {"lat": 23.400830, "value": 79.0, "lng": 113.451250},
+            {"lat": 23.400830, "value": 39.0, "lng": 113.251250},
+            {"lat": 22.803480, "value": 124.0, "lng": 113.168240},
+            {"lat": 23.353690, "value": 100.0, "lng": 113.267940},
+            {"lat": 23.23690, "value": 200.0, "lng": 113.467940},
+            {"lat": 23.094140, "value": 320.0, "lng": 113.261360}],paramName:"PM10",unit:"ug/m3"};
+
+        layer.update(data);
+    });
+</script>
+</html>
