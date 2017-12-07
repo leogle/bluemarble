@@ -1,8 +1,12 @@
 (function () {
+    /**
+     * 渲染图层
+     * @param option
+     * @constructor
+     */
     SpatialLayer = function(option) {
        var _ = {
            map: null,
-           amapLayer: null,
            canvas: {},
            data: null,
            paramName: "",
@@ -27,8 +31,12 @@
 
        this.configure(option);
        this.initLayer();
-   }
+   };
 
+    /**
+     * 配置图层
+     * @param option
+     */
     SpatialLayer.prototype.configure = function (option) {
         var self = this;
 
@@ -42,7 +50,7 @@
             0.1: "rgb(0,228,0)", //绿色 50
             0.2: "rgb(255,255,0)", //黄色 100
             0.3: "rgb(255,126,0)", //橙色 150
-            0.4: "rgb(255,0,0)", //红色 200   //当正好渲染此颜色时图片上有麻点，不知道原因未解决
+            0.4: "rgb(255,0,0)", //红色 200
             0.6: "rgb(153,0,76)", //紫色 300
             0.8: "rgb(126,0,35)", //褐红 400
             1.0: "rgb(126,0,35)"
@@ -53,10 +61,13 @@
         self.set("canvas", option.canvas || self.get("canvas"));
         self.set("polygons", option.polygons || self.get("polygons") || []);
         self.set('map',option.map);
-        var layer = this.prototype.configMap(this,option.map,option);
-        //self.set('amapLayer',layer);
+        self.set('force',option.force || false);
+        this.prototype.configMap(this,option.map,option);
     };
 
+    /**
+     * 初始化调色板
+     */
     SpatialLayer.prototype.initLayer = function () {
         var self = this;
         var _paleCanvas = document.createElement("canvas");
@@ -73,10 +84,13 @@
         self.set("palette", ctx.getImageData(0, 0, 1, 256).data);
     };
 
+    /**
+     * 渲染函数
+     */
     SpatialLayer.prototype.render = function () {
         console.log('render');
         var self = this.tag || this;
-        if(self == null)
+        if(self === null)
             return;
         if (!self.get("data")) {
             return;
@@ -90,6 +104,7 @@
         var _palette = self.get("palette");
         var _drawArea_GPS = self.get("drawArea");
         var _polygons = self.get("polygons");
+        var _force = self.get('force');
 
         self.prototype.resizeMap();
         var curScreenBounds = _map.getBounds();
@@ -100,7 +115,7 @@
         var crossArea_GPS = SpatialLayer._calcCrossRect(_drawArea_GPS, curScreenArea_GPS);
         var context = _canvas.getContext('2d');
 
-        if (crossArea_GPS == null || _spatialData == null) {
+        if (crossArea_GPS === null || _spatialData === null) {
             context.clearRect(0, 0, _canvas.width, _canvas.height);
             return;
         }
@@ -126,7 +141,7 @@
         var display_height = height_end - height_start;
         console.log(width_start);
         //根据计算量选择何种插值方式(200*150*300点)
-        if (display_height * display_width * _spatialData.length > 900000) {
+        if (display_height * display_width * _spatialData.length > 900000 && !_force) {
             //采用马赛克绘图,计算马赛克比例
             var lagerside = display_width > display_height ? display_width : display_height;
             var calccount = 900000 / _spatialData.length; //网格最大计算数量
@@ -180,7 +195,7 @@
          */
         for (var _i2 = y1; _i2 <= y2; _i2++) {
             for (var _j = x1; _j <= x2; _j++) {
-                if (matrixData[_i2][_j] == '') {
+                if (matrixData[_i2][_j] === '') {
 
                     //根据行政区边界裁剪
                     // if(polygons.length>0){
@@ -444,16 +459,5 @@
     SpatialLayer.prototype._getGradientDict = function () {
         //AQI颜色标记字典(依据IAQI比例分级)
         return this.get('gradient');
-        /*
-        return {
-            0: "rgb(0,200,255)", //蓝色 0
-            0.1: "rgb(0,228,0)", //绿色 50
-            0.2: "rgb(255,255,0)", //黄色 100
-            0.3: "rgb(255,126,0)", //橙色 150
-            0.4: "rgb(255,0,0)", //红色 200   //当正好渲染此颜色时图片上有麻点，不知道原因未解决
-            0.6: "rgb(153,0,76)", //紫色 300
-            0.8: "rgb(126,0,35)", //褐红 400
-            1.0: "rgb(126,0,35)"
-        };*/
     };
 })();

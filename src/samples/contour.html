@@ -9,7 +9,7 @@
     <script src="../js/d3-hsv.v0.1.js"></script>
     <script src="../js/d3-contour.v1.js"></script>
     <script src="../js/d3-geo.v1.js"></script>
-    <script src="../js/d3map.js"></script>
+    <script src="../js/util/d3map.js"></script>
     <script src="../js/util/pnpoly.js"></script>
 </head>
 
@@ -32,6 +32,7 @@
         .scale(4000)
         .translate([300, height*3/4]); //平移
     //颜色设置
+    d3.interpolateRgb(d3.rgb());
     var i0 = d3.interpolateHsvLong(d3.hsv(120, 1, 0.65), d3.hsv(60, 1, 0.90)),
         i1 = d3.interpolateHsvLong(d3.hsv(60, 1, 0.90), d3.hsv(0, 0, 0.95)),
         interpolateTerrain = function(t) {

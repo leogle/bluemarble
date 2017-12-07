@@ -20,14 +20,25 @@
 
     var gmap = new GeneralMap({
         type:'baidu',
-        map:map,
-        force:true,
+        map:map
     });
 
     var layer = new SpatialLayer({
         map:gmap,
         opacity:0.7,
         drawArea:{ "SW": [112.23, 21.0], "NE": [114.28, 24.11] },
+        gradient:{
+            0: "#eefdac",
+            0.1989: "#eefdac",
+            0.2: "#aede5b",
+            0.3989: "#aede5b",
+            0.4: "#5eaf1e",
+            0.5989: "#5eaf1e",
+            0.6: "#028b5b",
+            0.7989: "#028b5b",
+            0.8: "#008b15",
+            1.0: "#008b15"},
+        force:true
     });
 
     data = {datas:[{"lat": 23.002770, "value": 100.0, "lng": 113.252100}, {"lat": 23.400830, "value": 79.0, "lng": 113.451250},
