@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/d3.v4.js"></script>
+</head>
+<body>
+    <div>
+        <svg height="900px" width="900px" style="width: 900px;height: 900px;position: absolute"></svg>
+    </div>
+</body>
+<script>
+    var data = [{lng:223.261,lat:23.096,value:100,name: '站点1'},
+        {lng:113.061,lat:23.196,value:60,name: '站点2'},
+        {lng:113.161,lat:23.026,value:80,name: '站点3'}];
+
+    var svg = d3.select("svg");
+
+    svg.selectAll("g").append("g")
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr("cx",function (d) {
+            console.log(d.lng);
+            return d.lng;
+        })
+        .attr('cy',function (d) {
+            return d.lat;
+        })
+        .attr("r",function (d) {
+            return d.value;
+        })
+        .attr('fill','red');
+</script>
+</html>

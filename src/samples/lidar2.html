@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>高德雷达图</title>
-    <script src="js/layer/general-map.js"></script>
-    <script src="js/layer/layer-base.js"></script>
-    <script src="js/layer/lidar-layer.js"></script>
-    <script src="js/jquery-1.9.1.min.js"></script>
-    <script src="data/lidar2.js"></script>
-    <script src="js/painter/lidar-painter.js"></script>
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.1&key=c75741b6f2144f1c55dddbb864d76b4b"></script>
+    <script src="../js/layer/general-map.js"></script>
+    <script src="../js/layer/layer-base.js"></script>
+    <script src="../js/layer/lidar-layer.js"></script>
+    <script src="../js/jquery-1.9.1.min.js"></script>
+    <script src="../data/lidar2.js"></script>
+    <script src="../js/painter/lidar-painter.js"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.2&key=c75741b6f2144f1c55dddbb864d76b4b"></script>
 </head>
 <body>
-    <div id="map" style="width:100%; height:100%"></div>
+    <div id="map" style="width:100%; height:900px"></div>
 </body>
 <script>
     $(document).ready(function () {
         var map = new AMap.Map('map', {
             resizeEnable: true,
-            zoom: 16,
+            zoom: 13,
             center: [113.261, 23.096]
         });
         var features = [];

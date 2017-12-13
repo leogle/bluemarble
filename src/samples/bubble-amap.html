@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bubble</title>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.2&key=c75741b6f2144f1c55dddbb864d76b4b"></script>
+    <script src="../js/layer/general-map.js"></script>
+    <script src="../js/layer/layer-base.js"></script>
+    <script src="../js/layer/piechart-layer.js"></script>
+    <script src="../js/util/palette.js"></script>
+    <script src="../js/d3.v4.js"></script>
+    <link rel="stylesheet" href="../css/marker.css">
+</head>
+<body>
+<div id="map" style="width:900px; height:600px"></div>
+</body>
+<script>
+    var map = new AMap.Map('map', {
+        resizeEnable: true,
+        zoom: 11,
+        center: [113.261, 23.096]
+    });
+
+    var gmap = new GeneralMap({
+        type:'amap',
+        map:map,
+        force:true,
+    });
+
+    var layer = new PiecharLayer({
+        map:gmap,
+        style:'',
+        onclick:function (data) {
+            window.alert(data.name);
+        }
+    });
+    var data = [{lng:113.261,lat:23.096,value:100,name: '站点1'},
+        {lng:113.061,lat:23.196,value:60,name: '站点2'},
+        {lng:113.161,lat:23.026,value:80,name: '站点3'}];
+
+    layer.update(data);
+</script>
+</html>

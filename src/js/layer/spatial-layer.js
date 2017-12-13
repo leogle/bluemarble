@@ -14,10 +14,11 @@
            opacity: 0.8,
            palette: {},
            drawArea: { //插值绘制区域（屏幕坐标的左上角为0,0,经纬度左下角为0,0）;默认北京
-               "SW": [112.2605669596, 36.0900545859], //西南
+               "SW": [100.2605669596, 23.0900545859], //西南
                "NE": [120.4252357238, 41.0847299261] //东北
            },
-           polygons: []
+           polygons: [],
+           option:null
        };
 
        this.get = function (key) {
@@ -62,9 +63,17 @@
         self.set("polygons", option.polygons || self.get("polygons") || []);
         self.set('map',option.map);
         self.set('force',option.force || false);
+        self.set('option',option);
         this.prototype.configMap(this,option.map,option);
     };
 
+    SpatialLayer.prototype.config = function () {
+       this.prototype.configMap(this,this.get('option').map,this.get('option'));
+    };
+
+    SpatialLayer.prototype.setPolygon = function (polygon) {
+        this.set("polygons", option.polygons || self.get("polygons") || []);
+    };
     /**
      * 初始化调色板
      */
@@ -198,19 +207,18 @@
                 if (matrixData[_i2][_j] === '') {
 
                     //根据行政区边界裁剪
-                    // if(polygons.length>0){
-                    // 	let pointlnglat=map.containerToLngLat(new AMap.Pixel(j,i));
-                    // 	let iscontain=false;
-                    // 	for(let p of polygons){
-                    // 		if(p.contains(pointlnglat)){
-                    // 			iscontain=true;
-                    // 			break;
-                    // 		}
-                    // 	}
-                    // 	if(!iscontain){
-                    // 		continue;
-                    // 	}
-                    // }
+
+                    if(polygons && polygons.length>0) {
+                        for (var p in polygons) {
+                            if (p.contains(pointlnglat)) {
+                                iscontain = true;
+                                break;
+                            }
+                        }
+                        if (!iscontain) {
+                            continue;
+                        }
+                    }
 
                     var sum0 = 0,
                         sum1 = 0;

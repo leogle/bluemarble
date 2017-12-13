@@ -89,7 +89,7 @@
         var points = [];
         var map = this.get('map');
         this.get('data').forEach(function(station) {
-            var px = map.lnglatToPoint([station[0], station[1]]);
+            var px = map.lnglatToPoint([station[1], station[0]]);
             points.push({
                 x: px.x,
                 y: px.y,

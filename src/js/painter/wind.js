@@ -147,12 +147,13 @@ var Windy = function(options) {
 
         function render() {
             var prev = ctx.globalCompositeOperation;
+            ctx.fillStyle = 'rgba(0,0,0,0.91)';
             ctx.globalCompositeOperation = "destination-in";
             ctx.fillRect(0, 0, width, height);
             ctx.globalCompositeOperation = prev;
 
             ctx.beginPath();
-            // ctx.strokeStyle = 'rgba(23,139,231,.8)';
+            ctx.strokeStyle = 'rgba(23,139,231,.8)';
             particles.forEach(function(particle, i) {
                 ctx.moveTo(particle.x, particle.y);
                 ctx.lineTo(particle.xe, particle.ye);

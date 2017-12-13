@@ -4,12 +4,33 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="../js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.2&key=c75741b6f2144f1c55dddbb864d76b4b"></script>
 </head>
 <body>
     <img id="img" src="">
     <button onclick="getImg()">get</button>
+    <div style="width:900px; height:600px" id="container"></div>
 </body>
 <script>
+    var imageLayer = new AMap.ImageLayer({
+        url: 'http://localhost:3000/image/polygon',
+        bounds: new AMap.Bounds(
+            [109.161, 19.796],
+            [117.322, 26.996]
+        ),
+        zooms: [6, 18]
+    });
+
+    var map = new AMap.Map('container', {
+        resizeEnable: true,
+        center: [113.261, 23.096],
+        zoom: 6,
+        layers: [
+            new AMap.TileLayer(),
+            imageLayer
+        ]
+    });
+
     var getImg = function () {
     $.get('http://localhost:3000/render/spa',
         {data:{datas:[{"lat": 23.002770, "value": 100.0, "lng": 113.252100},
