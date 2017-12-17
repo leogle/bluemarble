@@ -1,9 +1,5 @@
 # bluemarble
 基于GIS的图层类库
-
-#概要说明
-基于GIS的图层类库目前实现功能：
-1、风图层
-2、渲染图层
-2、激光雷达图层
-#设计
+![渲染图](https://github.com/leogle/bluemarble/blob/master/src/images/20171207105022.png?raw=true)
+licence:
+GPL
