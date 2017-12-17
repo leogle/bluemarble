@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>标志物</title>
-    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=WrdHfTfV71jmAc5MVU33G22HxczFdSmP"></script>
+    <script type="text/javascript"
+            src="https://api.map.baidu.com/api?v=2.0&ak=WrdHfTfV71jmAc5MVU33G22HxczFdSmP"></script>
     <script src="../js/layer/general-map.js"></script>
     <script src="../js/layer/layer-base.js"></script>
     <script src="../js/layer/marker-layer.js"></script>
     <script src="../js/layer/spatial-layer.js"></script>
     <script src="../js/util/palette.js"></script>
     <script src="../js/d3.v4.js"></script>
+    <script src="../data/guangzhouaqi.js"></script>
     <link rel="stylesheet" href="../css/marker.css">
 </head>
 <body>
@@ -23,45 +25,46 @@
     map.enableScrollWheelZoom(true);
 
     var gmap2 = new GeneralMap({
-        type:'baidu',
-        map:map,
-        force:true,
+        type: 'baidu',
+        map: map,
+        force: true,
     });
 
     var slayer = new SpatialLayer({
-        map:gmap2,
-        opacity:0.7,
-        drawArea:{ "SW": [112.23, 21.0], "NE": [114.28, 24.11] },
+        map: gmap2,
+        opacity: 0.7,
+        drawArea: {"SW": [100.23, 19.0], "NE": [120.28, 30.11]},
     });
 
-    var data2 = {datas:[{"lat": 23.002770, "value": 100.0, "lng": 113.252100}, {"lat": 23.400830, "value": 79.0, "lng": 113.451250},
-        {"lat": 23.400830, "value": 39.0, "lng": 113.251250},
-        {"lat": 22.803480, "value": 124.0, "lng": 113.168240},
-        {"lat": 23.353690, "value": 100.0, "lng": 113.267940},
-        {"lat": 23.23690, "value": 200.0, "lng": 113.467940},
-        {"lat": 23.094140, "value": 450.0, "lng": 113.261360}],paramName:"PM10",unit:"ug/m3"};
-
-    slayer.update(data2);
+    slayer.update(guangzhoudata);
 
     var gmap = new GeneralMap({
-        type:'baidu',
-        map:map,
-        force:true,
+        type: 'baidu',
+        map: map,
+        force: true,
     });
 
     var layer = new MarkerLayer({
-        map:gmap,
-        style:'',
-        onclick:function (e) {
+        map: gmap,
+        style: '',
+        onclick: function (e) {
             var data = e.srcElement.parentElement.tag;
             window.alert(data.name);
         }
     });
-    var data = [{lng:113.261,lat:23.096,value:100,name: '站点1'},
-        {lng:113.061,lat:23.196,value:60,name: '站点2'},
-        {lng:113.161,lat:23.026,value:80,name: '站点3'}];
+    var data = [{lng: 113.261, lat: 23.096, value: 100, name: '站点1'},
+        {lng: 113.061, lat: 23.196, value: 60, name: '站点2'},
+        {lng: 113.161, lat: 23.026, value: 80, name: '站点3'}];
+    var datas = [];
+    for (var i = 0; i < guangzhoudata.datas.length; i++) {
+        guangzhoudata.datas[i] = {
+            lng: guangzhoudata.datas[i].lng,
+            lat: guangzhoudata.datas[i].lat,
+            value: guangzhoudata.datas[i].value,
+            name: '站点1',
+        }
+    }
 
-
-    layer.update(data);
+    layer.update(guangzhoudata.datas);
 </script>
 </html>

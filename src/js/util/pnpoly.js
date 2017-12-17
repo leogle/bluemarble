@@ -1,7 +1,7 @@
 /**
  * 判断该点是否在多边形内
- * @param point
- * @param vs
+ * @param {Array} point
+ * @param {Array} vs
  * @returns {boolean}
  */
 pnpoly = function (point, vs) {
@@ -15,12 +15,12 @@ pnpoly = function (point, vs) {
         var xi = vs[i][0], yi = vs[i][1];
         var xj = vs[j][0], yj = vs[j][1];
 
-        var intersect = ((yi > y) != (yj > y))
+        var intersect = ((yi > y) !== (yj > y))
             && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
         if (intersect) {
             inside = !inside
-        };
+        }
     }
-
+    //console.log(point,inside);
     return inside;
 };

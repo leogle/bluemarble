@@ -48,7 +48,7 @@
         option.layerOption = canvas;
         self.set('gradient',option.gradient || {
             0: "rgb(0,200,255)", //蓝色 0
-            0.1: "rgb(0,228,0)", //绿色 50
+            0.1: "rgb(0,200,0)", //绿色 50
             0.2: "rgb(255,255,0)", //黄色 100
             0.3: "rgb(255,126,0)", //橙色 150
             0.4: "rgb(255,0,0)", //红色 200
@@ -198,6 +198,12 @@
             }
         }
 
+        var pixPolygon;
+        if(polygons) {
+            pixPolygon = this.convertPolygon(polygons);
+            console.log(pixPolygon);
+        }
+
         /**
          * 插值矩阵数据,时间复杂度O(height*width*len)
          * 当height = 356, width = 673, len = 26时为6229288
@@ -207,7 +213,12 @@
                 if (matrixData[_i2][_j] === '') {
 
                     //根据行政区边界裁剪
-
+                    if(pixPolygon && pixPolygon.length>0) {
+                        if (!pnpoly([_j, _i2], pixPolygon)) {
+                            continue;
+                        }
+                    }
+                    /*
                     if(polygons && polygons.length>0) {
                         for (var p in polygons) {
                             if (p.contains(pointlnglat)) {
@@ -218,7 +229,7 @@
                         if (!iscontain) {
                             continue;
                         }
-                    }
+                    }*/
 
                     var sum0 = 0,
                         sum1 = 0;
@@ -266,6 +277,18 @@
         return image;
     };
 
+    SpatialLayer.prototype.convertPolygon = function(polygon){
+        console.log('convertPolygon');
+        var map  = this.get('map');
+        var pixPolygon = [];
+        for(var i = 0; i< polygon.length;i++){
+            var point = map.lnglatToPoint([polygon[i][0],polygon[i][1]]);
+            pixPolygon.push([point.x,point.y]);
+        }
+        console.log(pixPolygon);
+        return pixPolygon;
+    };
+
     SpatialLayer.prototype._interpolateRect = function (_spatialData, _paramName, context, alpha, _palette, width, height, x1, x2, y1, y2, rect_w, rect_h, polygons) {
         //将画布按照矩形马赛克做插值,按照矩阵格点的中心值做着色
 
@@ -289,6 +312,12 @@
                 matrixData[i][j] = '';
             }
         }
+
+        var pixPolygon;
+        if(polygons) {
+            pixPolygon = this.convertPolygon(polygons);
+            console.log(pixPolygon);
+        }
         //使用监测点数据初始化矩阵
         // for(let i = 0; i < dlen; i++) {
         // 	let point  = d[i];
@@ -310,19 +339,11 @@
             for (var _j3 = 0; _j3 <= rect_x_count; _j3++) {
                 if (matrixData[_i4][_j3] == '') {
                     //根据行政区边界裁剪
-                    // if(polygons.length>0){
-                    // 	let pointlnglat=map.containerToLngLat(new AMap.Pixel(rect_x1+j*rect_w,rect_y1+i*rect_h));
-                    // 	let iscontain=false;
-                    // 	for(let p of polygons){
-                    // 		if(p.contains(pointlnglat)){
-                    // 			iscontain=true;
-                    // 			break;
-                    // 		}
-                    // 	}
-                    // 	if(!iscontain){
-                    // 		continue;
-                    // 	}
-                    // }
+                    if(pixPolygon && pixPolygon.length>0) {
+                        if (!pnpoly([_j3, _i4], pixPolygon)) {
+                            continue;
+                        }
+                    }
 
 
                     var sum0 = 0,
@@ -383,7 +404,13 @@
 
         //格式[起始浓度,终止浓度,下一等级与当前等级的比例差] ,0.6的起始和终止值一样为了在iaqi>300后快速过度到0.8颜色
         if (param == "PM10") {
-            return { 0: [0, 50, 0.1], 0.1: [50, 150, 0.1], 0.2: [150, 250, 0.1], 0.3: [250, 350, 0.1], 0.4: [350, 420, 0.2], 0.6: [420, 420, null], 0.8: [420, null, null] }; //更高的值颜色不变
+            return { 0: [0, 50, 0.1],
+                0.1: [50, 150, 0.1],
+                0.2: [150, 250, 0.1],
+                0.3: [250, 350, 0.1],
+                0.4: [350, 420, 0.2],
+                0.6: [420, 420, null],
+                0.8: [420, null, null] }; //更高的值颜色不变
         } else if (param == "PM2_5") {
             return { 0: [0, 35, 0.1], 0.1: [35, 75, 0.1], 0.2: [75, 115, 0.1], 0.3: [115, 150, 0.1], 0.4: [150, 250, 0.2], 0.6: [250, 250, null], 0.8: [250, null, null] }; //更高的值颜色不变
         } else if (param == "SO2") {
