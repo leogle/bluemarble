@@ -13,24 +13,24 @@
 </body>
 <script>
     var imageLayer = new AMap.ImageLayer({
-        url: 'http://localhost:3000/image/polygon',
+        url: 'http://202.104.69.202:9035/render/spa?data%5Bdatas%5D%5B0%5D%5Blat%5D=23.00277&data%5Bdatas%5D%5B0%5D%5Bvalue%5D=100&data%5Bdatas%5D%5B0%5D%5Blng%5D=113.2521&data%5Bdatas%5D%5B1%5D%5Blat%5D=23.40083&data%5Bdatas%5D%5B1%5D%5Bvalue%5D=79&data%5Bdatas%5D%5B1%5D%5Blng%5D=113.45125&data%5Bdatas%5D%5B2%5D%5Blat%5D=23.40083&data%5Bdatas%5D%5B2%5D%5Bvalue%5D=39&data%5Bdatas%5D%5B2%5D%5Blng%5D=113.25125&data%5Bdatas%5D%5B3%5D%5Blat%5D=22.80348&data%5Bdatas%5D%5B3%5D%5Bvalue%5D=124&data%5Bdatas%5D%5B3%5D%5Blng%5D=113.16824&data%5Bdatas%5D%5B4%5D%5Blat%5D=23.35369&data%5Bdatas%5D%5B4%5D%5Bvalue%5D=100&data%5Bdatas%5D%5B4%5D%5Blng%5D=113.26794&data%5Bdatas%5D%5B5%5D%5Blat%5D=23.2369&data%5Bdatas%5D%5B5%5D%5Bvalue%5D=200&data%5Bdatas%5D%5B5%5D%5Blng%5D=113.46794&data%5Bdatas%5D%5B6%5D%5Blat%5D=23.09414&data%5Bdatas%5D%5B6%5D%5Bvalue%5D=320&data%5Bdatas%5D%5B6%5D%5Blng%5D=113.26136&data%5BparamName%5D=PM10&data%5Bunit%5D=ug%2Fm3&center%5B%5D=104.561&center%5B%5D=37.096&scale=550&size%5B%5D=600&size%5B%5D=500&sectorName=%E4%B8%AD%E5%9B%BD ',
         bounds: new AMap.Bounds(
-            [109.161, 19.796],
-            [117.322, 26.996]
+            [73.161, 14.196],
+            [135.522, 54.996]
         ),
-        zooms: [6, 18]
+        zooms: [3, 18]
     });
 
     var map = new AMap.Map('container', {
         resizeEnable: true,
-        center: [113.261, 23.096],
-        zoom: 6,
+        center: [108.261, 35.096],
+        zoom: 4,
         layers: [
             new AMap.TileLayer(),
             imageLayer
         ]
     });
-
+/*
     var getImg = function () {
     $.get('http://localhost:3000/render/spa',
         {data:{datas:[{"lat": 23.002770, "value": 100.0, "lng": 113.252100},
@@ -40,13 +40,14 @@
             {"lat": 23.353690, "value": 100.0, "lng": 113.267940},
             {"lat": 23.23690, "value": 200.0, "lng": 113.467940},
             {"lat": 23.094140, "value": 320.0, "lng": 113.261360}],paramName:"PM10",unit:"ug/m3"},
-        center:[113.25,23.10],
-        scale:4000,
-        size:[600,500],
-        sectorName:'广东省'})
+        center:[104.561, 37.096], //图片中心点经纬度
+        scale:550, //图片缩放值 参考值 中国:550-850,省份:4000 需要根据图片大小调整
+        size:[600,500], //图片大小
+        sectorName:'中国'}) //省份名称，参考china.json中省份的命名，中国就写中国
         .success(function (data) {
             $("#img")[0].src=data;
     });
     }
+    */
 </script>
 </html>

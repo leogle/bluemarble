@@ -329,7 +329,7 @@
     SpatialGrids.prototype._convertRegionData = function (data, polygons) {
         //data:{datas:[{"lat": 40.2929, "value": 21.0, "lng": 116.2266}, {"lat": 39.9301, "value": 16.0, "lng": 116.4233}...]
         //,paramName:"PM10",unit:"ug/m3"}
-        if (data == null) {
+        if (data === null) {
             return null;
         }
         //当区域大于3个时，不再裁剪（效率原因）
@@ -420,8 +420,8 @@
      * 根据偏移计算，速度快效果好
      * 获取指定xy要插值时左下g00，左上g01，右下g10，右上g11的值
      * @param  {[type]} grids    完整grids数据
-     * @param  {[type]} x0_offset 包含网格的左下角索引
-     * @param  {[type]} y0_offset 包含网格的左下角索引
+     * @param  {[type]} x_offset 包含网格的左下角索引
+     * @param  {[type]} y_offset 包含网格的左下角索引
      * @return {[type]}          [description]
      *
      * g01              g11

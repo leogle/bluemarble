@@ -51,7 +51,7 @@
 
     WindLayer.prototype.render = function () {
         var self = this.tag || this;
-        if(self == null)
+        if(self === null)
             return;
         if (!self.get("data")) {
             return;

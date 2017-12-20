@@ -72,7 +72,7 @@
     };
 
     SpatialLayer.prototype.setPolygon = function (polygon) {
-        this.set("polygons", option.polygons || self.get("polygons") || []);
+        this.set("polygons", polygon || option.polygons || self.get("polygons") || []);
     };
     /**
      * 初始化调色板
@@ -249,14 +249,14 @@
                         // sum0 += d[k].value*1.0/((i-d[k].y)*(i-d[k].y) + (j-d[k].x)*(j-d[k].x));
                         // sum1 += 1.0/((i-d[k].y)*(i-d[k].y) + (j-d[k].x)*(j-d[k].x));
                     }
-                    if (sum1 != 0) matrixData[_i2][_j] = sum0 / sum1; else matrixData[_i2][_j] = 0;
+                    if (sum1 !== 0) matrixData[_i2][_j] = sum0 / sum1; else matrixData[_i2][_j] = 0;
                 }
             }
         }
         //更新图片数据
         for (var _i3 = y1; _i3 <= y2; _i3++) {
             for (var _j2 = x1; _j2 <= x2; _j2++) {
-                if (matrixData[_i3][_j2] == "") {
+                if (matrixData[_i3][_j2] === "") {
                     continue;
                 }
                 var radio = SpatialLayer._getRadioByValue(_paramName, matrixData[_i3][_j2]);
@@ -337,7 +337,7 @@
          */
         for (var _i4 = 0; _i4 <= rect_y_count; _i4++) {
             for (var _j3 = 0; _j3 <= rect_x_count; _j3++) {
-                if (matrixData[_i4][_j3] == '') {
+                if (matrixData[_i4][_j3] === '') {
                     //根据行政区边界裁剪
                     if(pixPolygon && pixPolygon.length>0) {
                         if (!pnpoly([_j3, _i4], pixPolygon)) {
@@ -359,14 +359,14 @@
                         // sum0 += d[k].value*1.0/((i-d[k].y)*(i-d[k].y) + (j-d[k].x)*(j-d[k].x));
                         // sum1 += 1.0/((i-d[k].y)*(i-d[k].y) + (j-d[k].x)*(j-d[k].x));
                     }
-                    if (sum1 != 0) matrixData[_i4][_j3] = sum0 / sum1; else matrixData[_i4][_j3] = 0;
+                    if (sum1 !== 0) matrixData[_i4][_j3] = sum0 / sum1; else matrixData[_i4][_j3] = 0;
                 }
             }
         }
         //绘制矩形
         for (var _i5 = 0; _i5 <= rect_y_count; _i5++) {
             for (var _j4 = 0; _j4 <= rect_x_count; _j4++) {
-                if (matrixData[_i5][_j4] == "") {
+                if (matrixData[_i5][_j4] === "") {
                     continue;
                 }
 
@@ -375,8 +375,7 @@
                 var r = _palette[Math.floor(radio * 255 + 1) * 4 - 4];
                 var g = _palette[Math.floor(radio * 255 + 1) * 4 - 3];
                 var b = _palette[Math.floor(radio * 255 + 1) * 4 - 2];
-                var colortext = "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
-                context.fillStyle = colortext;
+                context.fillStyle = "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
                 context.fillRect(rect_x1 + _j4 * rect_w, rect_y1 + _i5 * rect_h, rect_w, rect_h);
             }
         }
@@ -389,7 +388,7 @@
             return 0.0;
         } else {
             for (var key in levelDict) {
-                if (levelDict[key][1] == null && value > levelDict[key][0]) {
+                if (levelDict[key][1] === null && value > levelDict[key][0]) {
                     //最大值
                     return key;
                 } else if (levelDict[key][0] < value && value <= levelDict[key][1]) {
@@ -403,7 +402,18 @@
         //根据污染物名称获取分级比例字典
 
         //格式[起始浓度,终止浓度,下一等级与当前等级的比例差] ,0.6的起始和终止值一样为了在iaqi>300后快速过度到0.8颜色
-        if (param == "PM10") {
+        if(param === "AQI"){
+            return {
+                0: [0, 50, 0.1],
+                0.1: [50, 100, 0.1],
+                0.2: [100, 200, 0.1],
+                0.3: [200, 300, 0.1],
+                0.4: [300, 500, 0.2],
+                0.6: [500, 500, null],
+                0.8: [500, null, null]
+            }; //更高的值颜色不变
+        }
+        else if (param === "PM10") {
             return { 0: [0, 50, 0.1],
                 0.1: [50, 150, 0.1],
                 0.2: [150, 250, 0.1],
@@ -411,15 +421,15 @@
                 0.4: [350, 420, 0.2],
                 0.6: [420, 420, null],
                 0.8: [420, null, null] }; //更高的值颜色不变
-        } else if (param == "PM2_5") {
+        } else if (param === "PM2_5") {
             return { 0: [0, 35, 0.1], 0.1: [35, 75, 0.1], 0.2: [75, 115, 0.1], 0.3: [115, 150, 0.1], 0.4: [150, 250, 0.2], 0.6: [250, 250, null], 0.8: [250, null, null] }; //更高的值颜色不变
-        } else if (param == "SO2") {
+        } else if (param === "SO2") {
             return { 0: [0, 150, 0.1], 0.1: [150, 500, 0.1], 0.2: [500, 650, 0.1], 0.3: [650, 800, 0.1], 0.4: [800, 1600, 0.2], 0.6: [1600, 1600, null], 0.86: [1600, null, null] }; //更高的值颜色不变
-        } else if (param == "NO2") {
+        } else if (param === "NO2") {
             return { 0: [0, 100, 0.1], 0.1: [100, 200, 0.1], 0.2: [200, 700, 0.1], 0.3: [700, 1200, 0.1], 0.4: [1200, 2340, 0.2], 0.6: [2340, 2340, null], 0.8: [2340, null, null] }; //更高的值颜色不变
-        } else if (param == "CO") {
+        } else if (param === "CO") {
             return { 0: [0, 5, 0.1], 0.1: [5, 10, 0.1], 0.2: [10, 35, 0.1], 0.3: [35, 60, 0.1], 0.4: [60, 90, 0.2], 0.6: [90, 90, null], 0.8: [90, null, null] }; //更高的值颜色不变
-        } else if (param == "O3") {
+        } else if (param === "O3") {
             return { 0: [0, 160, 0.1], 0.1: [160, 200, 0.1], 0.2: [200, 300, 0.1], 0.3: [300, 400, 0.1], 0.4: [400, 800, 0.2], 0.6: [800, 800, null], 0.8: [800, null, null] }; //更高的值颜色不变
         }
     };
