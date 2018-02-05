@@ -37,7 +37,7 @@
 
     function getBoundary(){
         var bdary = new BMap.Boundary();
-        bdary.get("中国", function(rs){       //获取行政区域
+        bdary.get("广东省", function(rs){       //获取行政区域
             map.clearOverlays();        //清除地图覆盖物
             var count = rs.boundaries.length; //行政区域的点有多少个
             if (count === 0) {
@@ -51,7 +51,7 @@
                 pointArray = pointArray.concat(ply.getPath());
                 console.log(ply.getPath());
             }
-            var ply = new BMap.Polygon(rs.boundaries[0], {strokeWeight: 2, strokeColor: "#ff0000"});
+            var ply = new BMap.Polygon(rs.boundaries[6], {strokeWeight: 2, strokeColor: "#ff0000"});
             var array =[];
             array = array.concat(ply.getPath());
             var dest = [];
@@ -59,13 +59,10 @@
                 dest.push([array[i].lng,array[i].lat]);
             }
             console.log(JSON.stringify(dest));
-            $.post('http://localhost:3000/render/put',{data:dest}).success(function (data) {
-
-            });
             map.setViewport(pointArray);    //调整视野
         });
     }
-    getBoundary();
+    //getBoundary();
     layer.update(data);
 </script>
 </html>

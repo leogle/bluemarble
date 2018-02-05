@@ -26,6 +26,5 @@
         };
         return d3.scaleSequential(interpolateColor).domain([0,400]);
     };
-'—'
 
 })();

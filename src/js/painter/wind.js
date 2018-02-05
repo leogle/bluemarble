@@ -17,7 +17,7 @@ var Windy = function(options) {
     var width = canvas.width;
     var height = canvas.height;
     var ctx = canvas.getContext('2d');
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1.5;
     ctx.fillStyle = 'rgba(0,0,0,0.91)';
     ctx.strokeStyle = 'rgba(71,160,233,1)';
 
@@ -43,7 +43,7 @@ var Windy = function(options) {
 
         vector.release = function() {
             columns = [];
-        }
+        };
 
         vector.randomize = function(o) {
             var x = Math.floor(Math.floor(Math.random() * bounds.width) + bounds.x);
@@ -51,7 +51,7 @@ var Windy = function(options) {
             o.x = x;
             o.y = y;
             return o;
-        }
+        };
         callback(bounds, vector);
     };
 
@@ -147,13 +147,13 @@ var Windy = function(options) {
 
         function render() {
             var prev = ctx.globalCompositeOperation;
-            ctx.fillStyle = 'rgba(0,0,0,0.91)';
+            ctx.fillStyle = 'rgba(0,0,0,0.90)';
             ctx.globalCompositeOperation = "destination-in";
             ctx.fillRect(0, 0, width, height);
             ctx.globalCompositeOperation = prev;
 
             ctx.beginPath();
-            ctx.strokeStyle = 'rgba(23,139,231,.8)';
+            ctx.strokeStyle = 'rgba(139,139,255,1)';
             particles.forEach(function(particle, i) {
                 ctx.moveTo(particle.x, particle.y);
                 ctx.lineTo(particle.xe, particle.ye);

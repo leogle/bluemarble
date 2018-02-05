@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Boundry</title>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.2&key=c75741b6f2144f1c55dddbb864d76b4b"></script>
+    <script src="../js/layer/general-map.js"></script>
+    <script src="../js/layer/layer-base.js"></script>
+    <script src="../js/layer/piechart-layer.js"></script>
+    <script src="../js/util/palette.js"></script>
+    <script src="../js/d3.v4.js"></script>
+    <link rel="stylesheet" href="../css/marker.css">
+</head>
+<body>
+<div id="map" style="width:900px; height:600px"></div>
+</body>
+<script>
+    var map = new AMap.Map('map', {
+        resizeEnable: true,
+        zoom: 7,
+        center: [113.261, 23.096]
+    });
+    AMap.service('AMap.DistrictSearch',function(){//回调函数
+        //实例化DistrictSearch
+        districtSearch = new AMap.DistrictSearch();
+        //TODO: 使用districtSearch对象调用行政区查询的功能
+        var districtSearch = new AMap.DistrictSearch({
+            extensions: 'all',  //返回行政区边界坐标组等具体信息
+        });
+        districtSearch.setLevel('province');
+        //districtSearch.setSubDistrict(0);
+        districtSearch.search('广东省', function(status, result){
+            var bounds = result.districtList[0].boundaries;
+            var polygon = new AMap.Polygon({  //行政区边界渲染，使用多边形覆盖物实现
+                map: map,
+                strokeWeight: 1,
+                path: bounds,
+                fillOpacity: 0.7,
+                fillColor: '#CCF3FF',
+                strokeColor: '#CC66CC'
+            });
+            console.log(polygon);
+            map.setFitView();
+        });
+    })
+
+</script>
+</html>

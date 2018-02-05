@@ -192,6 +192,23 @@
         }
     };
 
+    GeneralMap.prototype.pointToLngLat = function (point) {
+        var mapType = this.get('type');
+        var map = this.get('map');
+        var lnglat;
+        if(mapType === 'baidu'){
+            lnglat = map.overlayPixelToPoint(new BMap.Pixel(point[0],point[1]));
+            return {lng:lnglat.lng,lat:lnglat.lat};
+        }else if(mapType === 'amap'){
+            lnglat = map.containTolnglat(new AMap.Pixel(point[0],point[1]));
+            return {lng:lnglat.lng,lat:lnglat.lat};
+        }
+        else if(mapType === 'tmap'){
+            lnglat = map.lngLatToContainerPoint(new T.LngLat(point[0],point[1]));
+            return {x:point.x,y:point.y};
+        }
+    };
+
     /**
      * 获取中心处指定距离的像素数
      * @param center [lng,lat]
@@ -238,6 +255,18 @@
         else if(mapType == 'tmap'){
             var point =  map.getSize();
             return {width:point.x,height:point.y};
+        }
+    };
+
+    GeneralMap.prototype.getZoom = function (lnglat) {
+        var mapType = this.get('type');
+        if(mapType === 'baidu'){
+            return map.getZoom();
+        }else if(mapType === 'amap'){
+            return map.getZoom();
+        }
+        else if(mapType === 'tmap'){
+            return map.getZoom();
         }
     };
     /**
